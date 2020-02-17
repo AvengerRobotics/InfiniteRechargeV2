@@ -37,9 +37,9 @@ public class Robot extends TimedRobot {
   private DoubleSolenoid intakeSolenoid; // Creates the object for the solenoid
   private Compressor compressor;// class to control the solenoid
   private UsbCamera usbCamera; // Creates the object for the camera
+  // private boolean isColorManual = true;
 
   //private ColorCode colorCode;// class for color sensor code
-
 
   private String autoChoice = "Advanced1";
   private SimpleAuto simpleAuto;
@@ -49,7 +49,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // DO NOT TOUCH THIS SECTION
-
     controller = new Gamepad(new Joystick(0)); // Creates the controller on USB 0
     buttonPanel = new ControlPad(new Joystick(1)); // Creates the button panel on USB 1
     // DO NOT TOUCH THIS SECTION
@@ -68,13 +67,11 @@ public class Robot extends TimedRobot {
     intakeSolenoid = new DoubleSolenoid(0, 1);// creates the cylinder for the intake as an object
     compressor = new Compressor();// creates the compressor as an object
     
-
     usbCamera = CameraServer.getInstance().startAutomaticCapture("camera_serve_0", 0); // adds a source to the cameraserver from the camera on port 1
     usbCamera.setResolution(320, 240);
 
     timer = new Timer(); // timer method for autonomous
     simpleAuto = new SimpleAuto(timer, driveTrain);
-
 
     compressor.start(); // starts compressor in initialization
   }
@@ -98,17 +95,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-  if (controller.getRB())
-    driveTrain.tankDrive((controller.getLJoystickY()*.8),(controller.getRJoystickY()*.8)); // When RB is held, drivetrain runs at 80% of max power
-  else
-    driveTrain.tankDrive((controller.getLJoystickY()),(controller.getRJoystickY())); // Drivetrain normally runs at 100% power
+    if (controller.getRB()) {
+      driveTrain.tankDrive((controller.getLJoystickY()*.8),(controller.getRJoystickY()*.8)); // When RB is held, drivetrain runs at 80% of max power
+    } else {
+      driveTrain.tankDrive((controller.getLJoystickY()),(controller.getRJoystickY())); // Drivetrain normally runs at 100% power
+    }
 
-    
     intakeButton(); //method for intake and conveyor controls
     intakePneumatics(); //method for pneumatics to bring intake up and down
     controlPanelMotor(); //method for the  manual controls of the Wheel of Fortune
     winchMotorControls(); //method for winch motor controls
-    //colorCode.teleOpRun(); // runs class for color sensor
+    // colorCode.teleOpRun(isColorManual); // runs class for color sensor
   }
 
   @Override
@@ -125,7 +122,7 @@ public class Robot extends TimedRobot {
       break;
     }
   }
-  
+/*
   // private void AdvancedAuto() {
   //   if (timer.get() < 1.35){
   //     driveTrain.tankDrive(0.78, 0.78);
@@ -152,60 +149,46 @@ public class Robot extends TimedRobot {
   //     conveyorMotor.set(0);
   //   }
   // }
-
-  
+  */
   private void intakeButton() {
-    //if the intake button is pressed on the control panel, the intake will run
-    if (buttonPanel.getIntake()) {
+    if (buttonPanel.getIntake()) { // if the intake button is pressed on the control panel, the intake will run
       intakeMotor.set(-1);
-    } //if the conveyor button is pressed on the button panel, the conveyor motor will run
-    else if (buttonPanel.getConveyor()) {
+    } else if (buttonPanel.getConveyor()) { // if the conveyor button is pressed on the button panel, the conveyor motor will run
       conveyorMotor.set(-0.5);
-    } //if the ReverseIntake button is pressed on the button panel, the intake motor will run backwards
-    else if (buttonPanel.getReverseIntake()) {
+    } else if (buttonPanel.getReverseIntake()) { // if the ReverseIntake button is pressed on the button panel, the intake motor will run backwards
       intakeMotor.set(1);
-    } //if the ReverseConveyor button is pressed on the button panel, the conveyor motor will run backwards
-    else if (buttonPanel.getReverseConveyor()) {
+    } else if (buttonPanel.getReverseConveyor()) { // if the ReverseConveyor button is pressed on the button panel, the conveyor motor will run backwards
       conveyorMotor.set(0.5);
-    }  //if no button is pressed on the button panel, nothing will run
-    else {
+    } else { // if no button is pressed on the button panel, nothing will run
       conveyorMotor.set(0);
       intakeMotor.set(0);
     }
   }
 
   private void intakePneumatics() {
-    //if the PneumaticsDown button is pressed on the control panel, the intake will drop down
-    if (buttonPanel.getPneumaticsDown()) {
+    if (buttonPanel.getPneumaticsDown()) { // if the PneumaticsDown button is pressed on the control panel, the intake will drop down
       intakeSolenoid.set(DoubleSolenoid.Value.kReverse);
-    }//if the PneumaticsUp button is pressed on the control panel, the intake will be brought up
-    else if (buttonPanel.getPneumaticsUp() ) {
+    } else if (buttonPanel.getPneumaticsUp()) { // if the PneumaticsUp button is pressed on the control panel, the intake will be brought up
       intakeSolenoid.set(DoubleSolenoid.Value.kForward);
-    } //If neither is pressed, no airflow will happen
-    else {
+    } else { // If neither is pressed, no airflow will happen
       intakeSolenoid.set(DoubleSolenoid.Value.kOff);
     }
   }
 
   private void controlPanelMotor() {
-    //if the ControlPanel button is pressed on the button panel, the WoF motor will run
-    if (buttonPanel.getControlPanel()) {
+    if (buttonPanel.getControlPanel()) { // if the ControlPanel button is pressed on the button panel, the WoF motor will run
       controlPanelMotor.set(1);
-    }//if the ControlPanel button is not pressed, the motor will not run
-    else {
-      controlPanelMotor.set(0);
+    } else {
+      controlPanelMotor.set(0);// if the ControlPanel button is not pressed, the motor will not run
     }
   }
 
   private void winchMotorControls() {
-    //if the LiftUp button is pressed on the button panel, the motors will run to bring the lift up
-    if (buttonPanel.getUp()) {
-      winchMotors.set(1);
-    } //if the LiftDown button is pressed on the button panel, the motors will run to bring the lift down
-    else if (buttonPanel.getDown()) {
-      winchMotors.set(-1);
-    } //if neither button is pressed, the motors will not run
-    else {
+    if (buttonPanel.getUp()) { // if the LiftUp button is pressed on the button panel, the motors will run to bring the lift up
+      winchMotors.set(0.8);
+    } else if (buttonPanel.getDown()) { // if the LiftDown button is pressed on the button panel, the motors will run to bring the lift down
+      winchMotors.set(-0.8);
+    } else { // if neither button is pressed, the motors will not run
       winchMotors.set(0);
     }
   }

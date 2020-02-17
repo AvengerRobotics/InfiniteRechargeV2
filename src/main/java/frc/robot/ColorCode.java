@@ -55,7 +55,7 @@ public class ColorCode {
     initColorMap();
   }
 
-  public void teleOpRun() {
+  public void teleOpRun(boolean isControlManual) {
     detectedColor = colorSensor.getColor();
     match = colorMatcher.matchClosestColor(detectedColor);
 
@@ -85,49 +85,48 @@ public class ColorCode {
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", currentColor);
     // color code - current color is stored in currentColor
-
-    if (buttonPanel.getRawButton(6)) { // when the X button is clicked, it turns on the WoFMotor, then resets color
-                                       // changes and previous color
-      controlPanelMotor.set(1);
-      colorChanges = 0;
-      previousColor = "Unknown";
-      isSpinActive = true;
-    }
-    if (isSpinActive) { // it checks if the WoFMotor is still spinning due to the X button
-      if (!currentColor.equals(previousColor)) { // if the color changes, it increases the number of color changes by
-                                                 // one
-        colorChanges++; // increases color changes by 1
-        previousColor = currentColor; // updates previous color to be current color
+    if (!isControlManual) {
+      if (buttonPanel.getRawButton(6)) { // when the X button is clicked, it turns on the WoFMotor, then resets color changes and previous color
+        controlPanelMotor.set(1);
+        colorChanges = 0;
+        previousColor = "Unknown";
+        isSpinActive = true;
       }
-      if (colorChanges >= 32) { // if the color has changed more than 32 times, it will stop the motor
+      if (isSpinActive) { // it checks if the WoFMotor is still spinning due to the X button
+        if (!currentColor.equals(previousColor)) { // if the color changes, it increases the number of color changes by one
+          colorChanges++; // increases color changes by 1
+          previousColor = currentColor; // updates previous color to be current color
+        }
+        if (colorChanges >= 32) { // if the color has changed more than 32 times, it will stop the motor
+          controlPanelMotor.set(0);
+          isSpinActive = false;
+        }
+      }
+      if (buttonPanel.getRawButton(6)) { // stops over blue
+        controlPanelMotor.set(1);
+        isColorActive = true;
+        colorDetecting = "Red";
+      }
+      if (buttonPanel.getRawButton(7)) { // stops over red
+        controlPanelMotor.set(1);
+        isColorActive = true;
+        colorDetecting = "Blue";
+      }
+      if (buttonPanel.getRawButton(8)) { // stops over yellow
+        controlPanelMotor.set(1);
+        isColorActive = true;
+        colorDetecting = "Green";
+
+      }
+      if (buttonPanel.getRawButton(9)) { // stops over green
+        controlPanelMotor.set(1);
+        isColorActive = true;
+        colorDetecting = "Yellow";
+      }
+      if (isColorActive && currentColor.equals(colorMap.get(colorDetecting))) {
         controlPanelMotor.set(0);
-        isSpinActive = false;
+        isColorActive = false;
       }
-    }
-    if (buttonPanel.getRawButton(6)) { // stops over blue
-      controlPanelMotor.set(1);
-      isColorActive = true;
-      colorDetecting = "Red";
-    }
-    if (buttonPanel.getRawButton(7)) { // stops over red
-      controlPanelMotor.set(1);
-      isColorActive = true;
-      colorDetecting = "Blue";
-    }
-    if (buttonPanel.getRawButton(8)) { // stops over yellow
-      controlPanelMotor.set(1);
-      isColorActive = true;
-      colorDetecting = "Green";
-
-    }
-    if (buttonPanel.getRawButton(9)) { // stops over green
-      controlPanelMotor.set(1);
-      isColorActive = true;
-      colorDetecting = "Yellow";
-    }
-    if (isColorActive && currentColor.equals(colorMap.get(colorDetecting))) {
-      controlPanelMotor.set(0);
-      isColorActive = false;
     }
   }
 

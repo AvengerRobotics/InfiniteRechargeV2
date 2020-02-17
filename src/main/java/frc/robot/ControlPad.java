@@ -14,11 +14,11 @@ public class ControlPad{
         return station.getRawButton(3);
     }
  
-    public boolean getDown(){
-        return station.getRawButton(1);
-    }
+//    public boolean getDown(){
+//        return station.getRawButton(1);
+//    }
  
-    public boolean getRight(){
+    public boolean getDown(){
         return station.getRawButton(4);
     }
  
