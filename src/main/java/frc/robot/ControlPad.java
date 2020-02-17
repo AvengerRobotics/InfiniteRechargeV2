@@ -26,19 +26,19 @@ public class ControlPad{
         return station.getRawButton(2);
     }
  
-    public boolean getPneumaticsUp(){
+    public boolean getConveyor(){
         return station.getRawButton(6);
     }
  
-    public boolean getPneumaticsDown(){
+    public boolean getIntake(){
         return station.getRawButton(5);
     }
  
-    public boolean getIntake(){
+    public boolean getReverseConveyor(){
         return station.getRawButton(8);
     }
    
-    public boolean getDump(){
+    public boolean getReverseIntake(){
         return station.getRawButton(7);
     }
  
@@ -50,11 +50,11 @@ public class ControlPad{
         return station.getRawButton(9);
     }
  
-    public boolean getAutoClimb(){
+    public boolean getPneumaticsUp(){
         return station.getRawButton(12);
     }
  
-    public boolean getClimbStop(){
+    public boolean getPneumaticsDown(){
         return station.getRawButton(11);
     }
 }

@@ -1,9 +1,10 @@
+
 package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
-public class SimpleAuto{
+ public class SimpleAuto{
   private Timer timer;
   private DifferentialDrive driveTrain;
 
