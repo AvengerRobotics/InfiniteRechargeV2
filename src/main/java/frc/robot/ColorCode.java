@@ -15,7 +15,6 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -24,7 +23,7 @@ import edu.wpi.first.wpilibj.util.Color;
  */
 public class ColorCode {
   private WPI_VictorSPX controlPanelMotor; // Creates the object for the WoF motors
-  private Joystick buttonPanel; // creates the button panel
+  private ControlPad buttonPanel; // creates the button panel
   private ColorSensorV3 colorSensor; // creates the sensor
   private final ColorMatch colorMatcher = new ColorMatch();
   // the numbers used to match color sensor values to colors
@@ -43,7 +42,7 @@ public class ColorCode {
   private Map<String, String> colorMap;
 
 
-  public ColorCode(WPI_VictorSPX motor, Joystick buttonPanel, ColorSensorV3 sensor) {
+  public ColorCode(WPI_VictorSPX motor, ControlPad buttonPanel, ColorSensorV3 sensor) {
     controlPanelMotor = motor;
     this.buttonPanel = buttonPanel; // the buttonpanel outside this is = the buttonpanel inside this
     colorSensor = sensor;
@@ -86,7 +85,7 @@ public class ColorCode {
     SmartDashboard.putString("Detected Color", currentColor);
     // color code - current color is stored in currentColor
     if (!isControlManual) {
-      if (buttonPanel.getRawButton(6)) { // when the X button is clicked, it turns on the WoFMotor, then resets color changes and previous color
+      if (buttonPanel.getControlPanel()) { // when the X button is clicked, it turns on the WoFMotor, then resets color changes and previous color
         controlPanelMotor.set(1);
         colorChanges = 0;
         previousColor = "Unknown";
@@ -102,23 +101,23 @@ public class ColorCode {
           isSpinActive = false;
         }
       }
-      if (buttonPanel.getRawButton(6)) { // stops over blue
+      if (buttonPanel.getRed()) { // stops over blue
         controlPanelMotor.set(1);
         isColorActive = true;
         colorDetecting = "Red";
       }
-      if (buttonPanel.getRawButton(7)) { // stops over red
+      if (buttonPanel.getBlue()) { // stops over red
         controlPanelMotor.set(1);
         isColorActive = true;
         colorDetecting = "Blue";
       }
-      if (buttonPanel.getRawButton(8)) { // stops over yellow
+      if (buttonPanel.getGreen()) { // stops over yellow
         controlPanelMotor.set(1);
         isColorActive = true;
         colorDetecting = "Green";
 
       }
-      if (buttonPanel.getRawButton(9)) { // stops over green
+      if (buttonPanel.getYellow()) { // stops over green
         controlPanelMotor.set(1);
         isColorActive = true;
         colorDetecting = "Yellow";

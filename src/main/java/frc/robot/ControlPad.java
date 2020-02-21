@@ -19,12 +19,12 @@ public class ControlPad{
 //    }
  
     public boolean getDown(){
-        return station.getRawButton(4);
-    }
- 
-    public boolean getLeft(){
         return station.getRawButton(2);
     }
+ 
+    // public boolean getLeft(){
+    //     return station.getRawButton(10);
+    // }
  
     public boolean getConveyor(){
         return station.getRawButton(6);
@@ -43,18 +43,34 @@ public class ControlPad{
     }
  
     public boolean getControlPanel(){
-        return station.getRawButton(10);
-    }
- 
-    public boolean getReverse(){
         return station.getRawButton(9);
     }
  
+     public boolean getSpeed(){
+         return station.getRawButton(10);
+     }
+ 
     public boolean getPneumaticsUp(){
-        return station.getRawButton(12);
+        return station.getRawButton(11);
     }
  
     public boolean getPneumaticsDown(){
-        return station.getRawButton(11);
+        return station.getRawButton(12);
+    }
+
+    public boolean getRed(){
+        return station.getRawAxis(1) > 0;
+    }
+
+    public boolean getGreen(){
+        return station.getRawAxis(1) < 0;
+    }
+
+    public boolean getYellow(){
+        return station.getRawAxis(0) < 0;
+    }
+
+    public boolean getBlue(){
+        return station.getRawAxis(0) > 0;
     }
 }
