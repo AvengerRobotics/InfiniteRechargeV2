@@ -11,51 +11,43 @@ public class ControlPad{
     }
  
     public boolean getUp(){
-        return station.getRawButton(3);
+        return station.getRawButton(12);
     }
- 
-//    public boolean getDown(){
-//        return station.getRawButton(1);
-//    }
- 
+
     public boolean getDown(){
-        return station.getRawButton(2);
-    }
- 
-    // public boolean getLeft(){
-    //     return station.getRawButton(10);
-    // }
- 
-    public boolean getConveyor(){
-        return station.getRawButton(6);
-    }
- 
-    public boolean getIntake(){
-        return station.getRawButton(5);
-    }
- 
-    public boolean getReverseConveyor(){
-        return station.getRawButton(8);
-    }
-   
-    public boolean getReverseIntake(){
-        return station.getRawButton(7);
-    }
- 
-    public boolean getControlPanel(){
-        return station.getRawButton(9);
-    }
- 
-     public boolean getSpeed(){
-         return station.getRawButton(10);
-     }
- 
-    public boolean getPneumaticsUp(){
         return station.getRawButton(11);
     }
  
+    public boolean getConveyor(){
+        return station.getRawButton(3);
+    }
+ 
+    public boolean getIntake(){
+        return station.getRawButton(1);
+    }
+ 
+    public boolean getReverseConveyor(){
+        return station.getRawButton(4);
+    }
+   
+    public boolean getReverseIntake(){
+        return station.getRawButton(2);
+    }
+ 
+    public boolean getControlPanel(){
+        return station.getRawButton(5);
+    }
+ 
+     public boolean getSpeed(){
+         return station.getRawButton(6);
+     }
+ 
+    public boolean getPneumaticsUp(){
+        return station.getRawButton(8);
+    }
+ 
     public boolean getPneumaticsDown(){
-        return station.getRawButton(12);
+        return station.getRawButton(7);
     }
 
     public boolean getRed(){
