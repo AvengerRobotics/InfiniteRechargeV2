@@ -91,7 +91,7 @@ public class ColorCode {
         previousColor = "Unknown";
         isSpinActive = true;
       }
-      if (isSpinActive) { // it checks if the WoFMotor is still spinning due to the X button
+      if (isSpinActive && buttonPanel.getControlPanel()) { // it checks if the WoFMotor is still spinning due to the X button
         if (!currentColor.equals(previousColor)) { // if the color changes, it increases the number of color changes by one
           colorChanges++; // increases color changes by 1
           previousColor = currentColor; // updates previous color to be current color
