@@ -57,7 +57,8 @@ public class Robot extends TimedRobot {
 
   private DigitalInput topLimit, bottomLimit;
   private DigitalInput prox1, prox2; //creates the proximity switches for conveyer and intake
-  private boolean isIntakeDown = false;
+  private boolean isIntakeDown;
+  private boolean isColorWheelSpinning;
 
   @Override
   public void robotInit() {
@@ -98,6 +99,9 @@ public class Robot extends TimedRobot {
     bottomLimit = new DigitalInput(5);
 
     compressor.start(); // starts compressor in initialization
+
+    isIntakeDown = false;
+    isColorWheelSpinning = false;
   }
 
   public void teleopInit() {
@@ -122,8 +126,6 @@ public class Robot extends TimedRobot {
     } else {
       driveTrain.tankDrive((controller.getLJoystickY()*.8),(controller.getRJoystickY()*.8)); 
     }
-    teleopTimer.reset();
-
 
     intakeButton(); //method for intake and conveyor controls
     intakePneumatics(); //method for pneumatics to bring intake up and down
@@ -220,7 +222,7 @@ public class Robot extends TimedRobot {
         conveyorMotor.set(0);
       } 
     } else if (buttonPanel.getReverseIntake()) { // if the ReverseIntake button is pressed on the button panel, the intake motor will run backwards
-         intakeMotor.set(1);
+      intakeMotor.set(1);
     } else if (buttonPanel.getConveyor()) { //the conveyor motor will run at full speed of the conveyor Button is pressed
       conveyorMotor.set(-1);
     } else if (buttonPanel.getReverseConveyor()) { // if the ReverseConveyor button is pressed on the button panel, the conveyor motor will run backwards
@@ -249,7 +251,6 @@ public class Robot extends TimedRobot {
   /*  
   if (buttonPanel.getControlPanel() && timerIsOn == false) {
       timerIsOn = true;
-
       if (timerIsOn = true){
         teleopTimer.reset();
         teleopTimer.start();
@@ -261,14 +262,37 @@ public class Robot extends TimedRobot {
       }
     }
 */
-    if (buttonPanel.getControlPanel()) { // if the ControlPanel button is pressed on the button panel, the WoF motor will run
-      controlPanelMotor.set(0.3);
-     } else if (buttonPanel.getControlPanelAuto()) { // if the LiftDown button is pressed on the button panel, the motors will run to bring the lift down
-         controlPanelMotor.set(0.7);
-      } 
-     else {
-       controlPanelMotor.set(0);// if the ControlPanel button is not pressed, the motor will not run
-     }
+    if (buttonPanel.getControlPanelAuto()) { // if the ControlPanel button is pressed on the button panel, the WoF motor will run
+      controlPanelMotor.set(1);
+      teleopTimer.stop();
+      teleopTimer.reset();
+      teleopTimer.start();
+      isColorWheelSpinning = true;
+    } else if (buttonPanel.getControlPanel()) {
+      if (isColorWheelSpinning) {
+        controlPanelMotor.set(0);
+        isColorWheelSpinning = false;
+        teleopTimer.stop();
+        teleopTimer.reset();
+      } else {
+        controlPanelMotor.set(1);
+        isColorWheelSpinning = false;
+      }
+    } else {
+      if (isColorWheelSpinning) {
+        if (teleopTimer.get() >= 3) {
+          controlPanelMotor.set(0);
+          isColorWheelSpinning = false;
+          teleopTimer.stop();
+          teleopTimer.reset();
+        } else if (teleopTimer.get() < 3) {
+          controlPanelMotor.set(1);
+        }
+      } else {
+        controlPanelMotor.set(0);
+        isColorWheelSpinning = false;
+      }
+    }
   }
 
   private void winchMotorControls() {
