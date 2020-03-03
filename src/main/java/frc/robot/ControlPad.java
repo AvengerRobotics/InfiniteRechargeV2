@@ -38,9 +38,9 @@ public class ControlPad{
         return station.getRawButton(5);
     }
  
-     public boolean getSpeed(){
-         return station.getRawButton(6);
-     }
+    public boolean getControlPanelAuto(){
+        return station.getRawButton(6);
+    }
  
     public boolean getPneumaticsUp(){
         return station.getRawButton(8);
