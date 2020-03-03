@@ -46,7 +46,7 @@ public class ColorCode {
     controlPanelMotor = motor;
     this.buttonPanel = buttonPanel; // the buttonpanel outside this is = the buttonpanel inside this
     colorSensor = sensor;
-  // adds colors to the colormatcher
+    // adds colors to the colormatcher
     colorMatcher.addColorMatch(kBlueTarget);
     colorMatcher.addColorMatch(kGreenTarget);
     colorMatcher.addColorMatch(kRedTarget);
@@ -54,7 +54,7 @@ public class ColorCode {
     initColorMap();
   }
 
-  public void teleOpRun(boolean isControlManual) {
+  public void teleOpRun() {
     detectedColor = colorSensor.getColor();
     match = colorMatcher.matchClosestColor(detectedColor);
 
@@ -84,48 +84,52 @@ public class ColorCode {
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", currentColor);
     // color code - current color is stored in currentColor
-    if (!isControlManual) {
-      if (buttonPanel.getControlPanel()) { // when the X button is clicked, it turns on the WoFMotor, then resets color changes and previous color
-        controlPanelMotor.set(1);
-        colorChanges = 0;
-        previousColor = "Unknown";
-        isSpinActive = true;
+    if (buttonPanel.getControlPanelAuto()) { // when the X button is clicked, it turns on the WoFMotor, then resets color changes and previous color
+      controlPanelMotor.set(1);
+      colorChanges = 0;
+      previousColor = "Unknown";
+      isSpinActive = true;
+    }
+    if (isSpinActive) { // it checks if the WoFMotor is still spinning due to the X button
+      if (!currentColor.equals(previousColor)) { // if the color changes, it increases the number of color changes by one
+        colorChanges++; // increases color changes by 1
+        previousColor = currentColor; // updates previous color to be current color
       }
-      if (isSpinActive && buttonPanel.getControlPanel()) { // it checks if the WoFMotor is still spinning due to the X button
-        if (!currentColor.equals(previousColor)) { // if the color changes, it increases the number of color changes by one
-          colorChanges++; // increases color changes by 1
-          previousColor = currentColor; // updates previous color to be current color
-        }
-        if (colorChanges >= 32) { // if the color has changed more than 32 times, it will stop the motor
-          controlPanelMotor.set(0);
-          isSpinActive = false;
-        }
-      }
-      if (buttonPanel.getRed()) { // stops over blue
-        controlPanelMotor.set(1);
-        isColorActive = true;
-        colorDetecting = "Red";
-      }
-      if (buttonPanel.getBlue()) { // stops over red
-        controlPanelMotor.set(1);
-        isColorActive = true;
-        colorDetecting = "Blue";
-      }
-      if (buttonPanel.getGreen()) { // stops over yellow
-        controlPanelMotor.set(1);
-        isColorActive = true;
-        colorDetecting = "Green";
-
-      }
-      if (buttonPanel.getYellow()) { // stops over green
-        controlPanelMotor.set(1);
-        isColorActive = true;
-        colorDetecting = "Yellow";
-      }
-      if (isColorActive && currentColor.equals(colorMap.get(colorDetecting))) {
+      if (colorChanges >= 32) { // if the color has changed more than 32 times, it will stop the motor
         controlPanelMotor.set(0);
-        isColorActive = false;
+        isSpinActive = false;
       }
+    }
+    if (buttonPanel.getRed()) { // stops over blue
+      controlPanelMotor.set(1);
+      isColorActive = true;
+      colorDetecting = "Red";
+    }
+    if (buttonPanel.getBlue()) { // stops over red
+      controlPanelMotor.set(1);
+      isColorActive = true;
+      colorDetecting = "Blue";
+    }
+    if (buttonPanel.getGreen()) { // stops over yellow
+      controlPanelMotor.set(1);
+      isColorActive = true;
+      colorDetecting = "Green";
+
+    }
+    if (buttonPanel.getYellow()) { // stops over green
+      controlPanelMotor.set(1);
+      isColorActive = true;
+      colorDetecting = "Yellow";
+    }
+    if (isColorActive && currentColor.equals(colorMap.get(colorDetecting))) {
+      controlPanelMotor.set(0);
+      isColorActive = false;
+    }
+
+    if (buttonPanel.getControlPanelAuto() && controlPanelMotor.get() != 0){
+      controlPanelMotor.set(0);
+      isSpinActive = false;
+      isColorActive = false;
     }
   }
 
